@@ -1,0 +1,6 @@
+[core]
+    remote = awss3
+['remote "url"']
+    url = s3://sysdig-kops-integration01-us-east-1-064689838359/integration01.us-east-1.dev.kubernetes.sysdig.tools/test/
+['remote "awss3"']
+    url = s3://sysdig-kops-integration01-us-east-1-064689838359/integration01.us-east-1.dev.kubernetes.sysdig.tools/test/
