@@ -26,13 +26,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r starter/requirements.txt
         pip install pytest flake8 dvc[s3]
-
-    # Setup DVC
-    - name: Setup DVC
-      uses: iterative/setup-dvc@v1
-    # Pull data with DVC
-    - name: Pull data from DVC remote
-      run: dvc pull
     # Execute flake8. Stop if error
     - name: Lint with flake8
       run: |
