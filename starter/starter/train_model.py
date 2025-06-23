@@ -13,7 +13,7 @@ from ml.model import train_model, inference, compute_model_metrics
 from slice_metrics import evaluate_slices
 
 # Add code to load in the data.
-data = pd.read_csv("../../data/census_clean.csv")
+data = pd.read_csv("../data/census_clean.csv")
 
 cat_features = [
     "workclass",
