@@ -1,20 +1,18 @@
-# Put the code for your API here.
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
 import pickle
+import os
 import pandas as pd
 
-with open("model/model.pkl", "rb") as f:
-    model = pickle.load(f)
-
-# Create the app
 app = FastAPI()
 
-# Define what input should looks like
-class PersonInput(BaseModel):
+model = None
+
+# Define input schema with field aliasing for hyphenated names
+class InferenceInput(BaseModel):
     age: int
     workclass: str = Field(..., alias="workclass")
-    fnlwgt: int
+    fnlgt: int
     education: str
     education_num: int = Field(..., alias="education-num")
     marital_status: str = Field(..., alias="marital-status")
@@ -31,32 +29,41 @@ class PersonInput(BaseModel):
         allow_population_by_field_name = True
         schema_extra = {
             "example": {
-                "age": 39,
-                "workclass": "State-gov",
-                "fnlwgt": 77516,
+                "age": 35,
+                "workclass": "Private",
+                "fnlgt": 284582,
                 "education": "Bachelors",
                 "education-num": 13,
-                "marital-status": "Never-married",
-                "occupation": "Adm-clerical",
-                "relationship": "Not-in-family",
+                "marital-status": "Married-civ-spouse",
+                "occupation": "Exec-managerial",
+                "relationship": "Husband",
                 "race": "White",
                 "sex": "Male",
-                "capital-gain": 2174,
+                "capital-gain": 0,
                 "capital-loss": 0,
-                "hours-per-week": 40,
+                "hours-per-week": 45,
                 "native-country": "United-States"
             }
         }
-# root path
-@app.get("/")
-def hello():
-    return {"message": "Hello Udacity"}
 
-# prediction path
+@app.on_event("startup")
+def load_model():
+    global model
+    model_path = os.path.join("starter", "model", "model.pkl")
+    if os.path.exists(model_path):
+        with open(model_path, "rb") as f:
+            model = pickle.load(f)
+
+@app.get("/")
+def root():
+    return {"message": "Welcome to the Income Prediction API!"}
+
 @app.post("/predict")
-def make_prediction(input_data: PersonInput):
-    data = pd.DataFrame([input_data.model_dump(by_alias=True)])
-    
-    # Use model to predict
-    prediction = model.predict(data)[0]
-    return {"prediction": int(prediction)}
+def predict(input_data: InferenceInput):
+    global model
+    if model is None:
+        return {"error": "Model not loaded"}
+
+    input_df = pd.DataFrame([input_data.dict(by_alias=True)])
+    prediction = model.predict(input_df)
+    return {"prediction": int(prediction[0])}
