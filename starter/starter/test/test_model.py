@@ -1,6 +1,6 @@
 import pytest
 import numpy as np
-from starter.ml.model import train_model, inference, compute_model_metrics
+from ml.model import train_model, inference, compute_model_metrics
 from sklearn.ensemble import RandomForestClassifier
 
 # Dummy data for tests
