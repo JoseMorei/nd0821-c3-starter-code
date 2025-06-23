@@ -36,4 +36,5 @@ jobs:
     # Execute pytest
     - name: Test with pytest
       run: |
+        export PYTHONPATH=./starter/starter
         python -m pytest
