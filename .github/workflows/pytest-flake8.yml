@@ -23,11 +23,6 @@ jobs:
         pip install -r starter/requirements.txt
         pip install pytest flake8 dvc[s3]
 
-    - name: Train model so model.pkl exists
-      run: |
-        export PYTHONPATH=./starter/starter
-        python starter/starter/train_model.py
-
     - name: Lint with flake8
       run: |
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
