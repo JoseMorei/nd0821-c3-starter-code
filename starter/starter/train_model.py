@@ -13,7 +13,9 @@ from ml.model import train_model, inference, compute_model_metrics
 from slice_metrics import evaluate_slices
 
 # Add code to load in the data.
-data = pd.read_csv("../data/census_clean.csv")
+data_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../data/census.csv"))
+data = pd.read_csv(data_path)
+
 
 cat_features = [
     "workclass",
