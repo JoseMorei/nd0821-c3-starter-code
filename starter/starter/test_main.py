@@ -29,7 +29,6 @@ def test_predict_over_50k():
     )
     res = client.post("/predict", json=input_data.dict(by_alias=True))
     assert res.status_code == 200
-#    assert res.json()["prediction"] in [0, 1]
     
 # # POST test - under 50K 
 def test_predict_under_50k():
@@ -51,4 +50,3 @@ def test_predict_under_50k():
     )
     res = client.post("/predict", json=input_data.dict(by_alias=True))
     assert res.status_code == 200
- #   assert res.json()["prediction"] in [0, 1]
