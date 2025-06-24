@@ -14,7 +14,7 @@ def test_predict_over_50k():
     input_data = InferenceInput(
         age=52,
         workclass="Self-emp-not-inc",
-        fnlwgt=209642,
+        fnlgt=209642,
         education="HS-grad",
         education_num=9,
         marital_status="Married-civ-spouse",
@@ -36,7 +36,7 @@ def test_predict_under_50k():
     input_data = InferenceInput(
         age= 23,
         workclass= "Private",
-        fnlwgt= 190709,
+        fnlgt= 190709,
         education= "Some-college",
         education_num= 10,
         marital_status= "Never-married",
