@@ -3,10 +3,25 @@ from pydantic import BaseModel, Field
 import joblib
 import os
 import pandas as pd
+from ml.data import process_data
+
 
 app = FastAPI()
 
 model = None
+encoder = None
+lb = None
+
+cat_features = [
+    "workclass",
+    "education",
+    "marital-status",
+    "occupation",
+    "relationship",
+    "race",
+    "sex",
+    "native-country",
+]
 
 # Define input schema with field aliasing for hyphenated names
 class InferenceInput(BaseModel):
@@ -46,14 +61,28 @@ class InferenceInput(BaseModel):
             }
         }
 
+# starter/main.py
+
 @app.on_event("startup")
 def load_model():
-    global model
-    model_path = os.path.join("starter", "model", "model.pkl")
+    global model, encoder, lb
+    # Use absolute path to the model folder
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    model_dir = os.path.join(base_dir, "model")
+
+    model_path = os.path.join(model_dir, "model.pkl")
+    encoder_path = os.path.join(model_dir, "encoder.pkl")
+    lb_path = os.path.join(model_dir, "label_binarizer.pkl")
+
+    print(f"Loading model from: {model_path}")
+    print("Exists:", os.path.exists(model_path))
+
     if os.path.exists(model_path):
-        with open(model_path, "rb") as f:
-            model = joblib.load(model_path)
-#            model = pickle.load(f)
+        model = joblib.load(model_path)
+    if os.path.exists(encoder_path):
+        encoder = joblib.load(encoder_path)
+    if os.path.exists(lb_path):
+        lb = joblib.load(lb_path)
 
 @app.get("/")
 def root():
@@ -61,12 +90,22 @@ def root():
 
 @app.post("/predict")
 def predict(input_data: InferenceInput):
-    global model
-    if model is None:
-        return {"error": "Model not loaded"}
+    global model, encoder, lb
+
+    if model is None or encoder is None or lb is None:
+        return {"error": "Model or encoders not loaded"}
 
     input_df = pd.DataFrame([input_data.dict(by_alias=True)])
-    prediction = model.predict(input_df)
+
+    # Preprocess using training-time encoder
+    X, _, _, _ = process_data(
+        input_df,
+        categorical_features=cat_features,
+        training=False,
+        encoder=encoder,
+        lb=lb
+    )
+    prediction = model.predict(X)
     return {"prediction": int(prediction[0])}
 
 __all__ = ["app", "InferenceInput"]

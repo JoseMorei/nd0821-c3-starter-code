@@ -2,6 +2,10 @@ import pytest
 import numpy as np
 from ml.model import train_model, inference, compute_model_metrics
 from sklearn.ensemble import RandomForestClassifier
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 # Dummy data for tests
 X_dummy = np.array([[0, 1], [1, 1], [0, 0], [1, 0]])
