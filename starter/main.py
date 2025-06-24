@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
-import pickle
+import joblib
 import os
 import pandas as pd
 
@@ -52,7 +52,8 @@ def load_model():
     model_path = os.path.join("starter", "model", "model.pkl")
     if os.path.exists(model_path):
         with open(model_path, "rb") as f:
-            model = pickle.load(f)
+            model = joblib.load(model_path)
+#            model = pickle.load(f)
 
 @app.get("/")
 def root():
