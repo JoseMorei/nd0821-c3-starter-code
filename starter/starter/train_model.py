@@ -1,10 +1,7 @@
 # This script trains on the clean data and saves the model. 
-
 #  Add the necessary imports for the starter code.
 import pandas as pd
-#from sklearn.model_selection import KFold
 from sklearn.model_selection import train_test_split
-#from sklearn.metrics import precision_score, recall_score, f1_score
 import joblib
 import os
 

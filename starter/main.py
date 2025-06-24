@@ -67,3 +67,5 @@ def predict(input_data: InferenceInput):
     input_df = pd.DataFrame([input_data.dict(by_alias=True)])
     prediction = model.predict(input_df)
     return {"prediction": int(prediction[0])}
+
+__all__ = ["app", "InferenceInput"]

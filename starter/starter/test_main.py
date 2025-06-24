@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-from main import app, InputData 
+from main import app, InferenceInput 
 
 client = TestClient(app)
 
@@ -11,7 +11,7 @@ def test_root():
 
 # POST test - over 50K 
 def test_predict_over_50k():
-    input_data = InputData(
+    input_data = InferenceInput(
         age=52,
         workclass="Self-emp-not-inc",
         fnlwgt=209642,
@@ -33,7 +33,7 @@ def test_predict_over_50k():
     
 # # POST test - under 50K 
 def test_predict_under_50k():
-    input_data = InputData(
+    input_data = InferenceInput(
         age= 23,
         workclass= "Private",
         fnlwgt= 190709,
